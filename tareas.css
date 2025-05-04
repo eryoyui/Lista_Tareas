@@ -113,6 +113,7 @@ ul#lista {
     margin-top: 20px;
 }
 
+/* Estilo para las tareas en la lista */
 ul#lista li {
     background-color: #f4f7f6;
     border-left: 4px solid #607d8b;
@@ -120,7 +121,40 @@ ul#lista li {
     margin-bottom: 10px;
     border-radius: 5px;
     font-size: 1rem;
+    display: flex;
+    justify-content: space-between;  /* Distribuye los elementos */
+    align-items: center;  /* Alinea los elementos verticalmente */
 }
+
+/* Contenedor para los botones dentro de cada tarea */
+ul#lista li .botones {
+    display: flex;
+    gap: 10px;  /* Espacio entre los botones */
+}
+
+/* Estilo para los botones */
+ul#lista li button {
+    background-color: #607d8b;
+    color: #fff;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+ul#lista li button:hover {
+    background-color: #455a64;
+}
+
+/* Estilo para el texto de la tarea */
+ul#lista li span {
+    flex-grow: 1; /* Deja espacio para los botones */
+    word-wrap: break-word;  /* Asegura que el texto se ajuste */
+    overflow-wrap: break-word;
+}
+
 
 @media (max-width: 768px) {
     #contenedor {

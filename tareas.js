@@ -15,6 +15,9 @@ botonAgregar.addEventListener("click", () => {
     const textoTarea = document.createElement("span");
     textoTarea.textContent = texto;
 
+    const contenedorBotones = document.createElement("div");
+    contenedorBotones.classList.add("botones");
+
     const botonEditar = document.createElement("button");
     botonEditar.textContent = "Editar";
     botonEditar.classList.add("editar");
@@ -25,13 +28,13 @@ botonAgregar.addEventListener("click", () => {
 
     botonEditar.addEventListener("click", () => {
         if (botonEditar.textContent === "Editar") {
-            textoTarea.contentEditable = "true";  // Hacemos editable el texto
-            textoTarea.style.backgroundColor = "#f7f7f7";  // Cambio de fondo para indicar edición
-            textoTarea.focus();  // Focus en el campo editable
+            textoTarea.contentEditable = "true";
+            textoTarea.style.backgroundColor = "#f7f7f7";
+            textoTarea.focus();
             botonEditar.textContent = "Guardar";
         } else {
-            textoTarea.contentEditable = "false";  // Deshabilitamos la edición
-            textoTarea.style.backgroundColor = "transparent";  // Restaura el fondo original
+            textoTarea.contentEditable = "false";
+            textoTarea.style.backgroundColor = "transparent";
             botonEditar.textContent = "Editar";
         }
     });
@@ -40,9 +43,11 @@ botonAgregar.addEventListener("click", () => {
         lista.removeChild(nuevaTarea);
     });
 
+    contenedorBotones.appendChild(botonEditar);
+    contenedorBotones.appendChild(botonEliminar);
+
     nuevaTarea.appendChild(textoTarea);
-    nuevaTarea.appendChild(botonEditar);
-    nuevaTarea.appendChild(botonEliminar);
+    nuevaTarea.appendChild(contenedorBotones);
     lista.appendChild(nuevaTarea);
 
     inputTarea.value = "";
