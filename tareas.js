@@ -4,7 +4,14 @@ const inputTarea = document.getElementById("inputTarea");
 const selectCategoria = document.getElementById("categoria");
 const filtroCat = document.getElementById("filtroCat");
 const botonFiltrar = document.getElementById("filtrar");
+//DPM-Vaciar lista
+const botonVaciar = document.getElementById("vaciar");
 
+botonVaciar.addEventListener("click", () => {
+    tareas = [];
+    mostrarTareas();
+});
+//DPM
 let tareas = [];
 
 botonAgregar.addEventListener("click", () => {
