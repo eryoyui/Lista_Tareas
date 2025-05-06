@@ -4,15 +4,15 @@ const inputTarea = document.getElementById("inputTarea");
 const selectCategoria = document.getElementById("categoria");
 const filtroCat = document.getElementById("filtroCat");
 const botonFiltrar = document.getElementById("filtrar");
-//DPM-Vaciar lista
 const botonVaciar = document.getElementById("vaciar");
+
+let tareas = [];
+let idCounter = 1;
 
 botonVaciar.addEventListener("click", () => {
     tareas = [];
     mostrarTareas();
 });
-//DPM
-let tareas = [];
 
 botonAgregar.addEventListener("click", () => {
     const texto = inputTarea.value.trim();
@@ -24,6 +24,7 @@ botonAgregar.addEventListener("click", () => {
     }
 
     const nuevaTarea = {
+        id: idCounter++,
         texto: texto,
         categoria: categoria
     };
@@ -33,19 +34,20 @@ botonAgregar.addEventListener("click", () => {
     inputTarea.value = "";
 });
 
-function mostrarTareas() {
+function mostrarTareas(listaTareas = tareas) {
     lista.innerHTML = "";
 
-    tareas.forEach(tarea => {
+    listaTareas.forEach(tarea => {
         const nuevaTareaElement = document.createElement("li");
 
         const textoTarea = document.createElement("span");
         textoTarea.textContent = tarea.texto;
 
         const categoriaTarea = document.createElement("span");
-        categoriaTarea.textContent = tarea.categoria;
+        categoriaTarea.textContent = " [" + tarea.categoria + "]";
         categoriaTarea.style.fontStyle = "italic";
         categoriaTarea.style.color = "#607d8b";
+        categoriaTarea.style.marginLeft = "10px";
 
         const contenedorBotones = document.createElement("div");
         contenedorBotones.classList.add("botones");
@@ -58,6 +60,14 @@ function mostrarTareas() {
         botonEliminar.textContent = "Eliminar";
         botonEliminar.classList.add("eliminar");
 
+        const botonExportarJSON = document.createElement("button");
+        botonExportarJSON.textContent = "Exportar JSON";
+        botonExportarJSON.addEventListener("click", () => exportarTarea(tarea.id, "json"));
+
+        const botonExportarCSV = document.createElement("button");
+        botonExportarCSV.textContent = "Exportar CSV";
+        botonExportarCSV.addEventListener("click", () => exportarTarea(tarea.id, "csv"));
+
         botonEditar.addEventListener("click", () => {
             if (botonEditar.textContent === "Editar") {
                 textoTarea.contentEditable = "true";
@@ -68,6 +78,7 @@ function mostrarTareas() {
                 textoTarea.contentEditable = "false";
                 textoTarea.style.backgroundColor = "transparent";
                 botonEditar.textContent = "Editar";
+                tarea.texto = textoTarea.textContent.trim(); // Actualiza el texto si se edita
             }
         });
 
@@ -76,11 +87,14 @@ function mostrarTareas() {
             mostrarTareas();
         });
 
+        contenedorBotones.appendChild(botonEditar);
+        contenedorBotones.appendChild(botonEliminar);
+        contenedorBotones.appendChild(botonExportarJSON);
+        contenedorBotones.appendChild(botonExportarCSV);
+
         nuevaTareaElement.appendChild(textoTarea);
         nuevaTareaElement.appendChild(categoriaTarea);
         nuevaTareaElement.appendChild(contenedorBotones);
-        contenedorBotones.appendChild(botonEditar);
-        contenedorBotones.appendChild(botonEliminar);
 
         lista.appendChild(nuevaTareaElement);
     });
@@ -88,63 +102,34 @@ function mostrarTareas() {
 
 botonFiltrar.addEventListener("click", () => {
     const categoriaSeleccionada = filtroCat.value;
-
-    let tareasFiltradas;
-    if (categoriaSeleccionada === "todos") {
-        tareasFiltradas = tareas;
-    } else {
-        tareasFiltradas = tareas.filter(tarea => tarea.categoria === categoriaSeleccionada);
-    }
-
-    lista.innerHTML = "";
-    tareasFiltradas.forEach(tarea => {
-        const nuevaTareaElement = document.createElement("li");
-
-        const textoTarea = document.createElement("span");
-        textoTarea.textContent = tarea.texto;
-
-        const categoriaTarea = document.createElement("span");
-        categoriaTarea.textContent = tarea.categoria;
-        categoriaTarea.style.fontStyle = "italic";
-        categoriaTarea.style.color = "#607d8b";
-
-        const contenedorBotones = document.createElement("div");
-        contenedorBotones.classList.add("botones");
-
-        const botonEditar = document.createElement("button");
-        botonEditar.textContent = "Editar";
-        botonEditar.classList.add("editar");
-
-        const botonEliminar = document.createElement("button");
-        botonEliminar.textContent = "Eliminar";
-        botonEliminar.classList.add("eliminar");
-
-        botonEditar.addEventListener("click", () => {
-            if (botonEditar.textContent === "Editar") {
-                textoTarea.contentEditable = "true";
-                textoTarea.style.backgroundColor = "#f7f7f7";
-                textoTarea.focus();
-                botonEditar.textContent = "Guardar";
-            } else {
-                textoTarea.contentEditable = "false";
-                textoTarea.style.backgroundColor = "transparent";
-                botonEditar.textContent = "Editar";
-            }
-        });
-
-        botonEliminar.addEventListener("click", () => {
-            tareas = tareas.filter(t => t !== tarea);
-            mostrarTareas();
-        });
-
-        nuevaTareaElement.appendChild(textoTarea);
-        nuevaTareaElement.appendChild(categoriaTarea);
-        nuevaTareaElement.appendChild(contenedorBotones);
-        contenedorBotones.appendChild(botonEditar);
-        contenedorBotones.appendChild(botonEliminar);
-
-        lista.appendChild(nuevaTareaElement);
-    });
+    const tareasFiltradas = categoriaSeleccionada === "todos"
+        ? tareas
+        : tareas.filter(t => t.categoria === categoriaSeleccionada);
+    mostrarTareas(tareasFiltradas);
 });
+
+function exportarTarea(id, tipo) {
+    const tarea = tareas.find(t => t.id === id);
+    if (!tarea) return;
+
+    if (tipo === "json") {
+        const blob = new Blob([JSON.stringify(tarea, null, 2)], { type: "application/json" });
+        descargarArchivo(blob, `tarea-${id}.json`);
+    } else if (tipo === "csv") {
+        const encabezado = "ID,Texto,Categoria\n";
+        const fila = `${tarea.id},"${tarea.texto}","${tarea.categoria}"\n`;
+        const blob = new Blob([encabezado + fila], { type: "text/csv" });
+        descargarArchivo(blob, `tarea-${id}.csv`);
+    }
+}
+
+function descargarArchivo(blob, nombreArchivo) {
+    const url = URL.createObjectURL(blob);
+    const enlace = document.createElement("a");
+    enlace.href = url;
+    enlace.download = nombreArchivo;
+    enlace.click();
+    URL.revokeObjectURL(url);
+}
 
 mostrarTareas();
