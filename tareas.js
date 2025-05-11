@@ -158,3 +158,4 @@ inputImportar.addEventListener("change", (evento) => {
     lector.readAsText(archivo);
 });
 
+
