@@ -133,3 +133,28 @@ function descargarArchivo(blob, nombreArchivo) {
 }
 
 mostrarTareas();
+
+const inputImportar = document.getElementById("importar");
+
+inputImportar.addEventListener("change", (evento) => {
+    const archivo = evento.target.files[0];
+    if (!archivo) return;
+
+    const lector = new FileReader();
+    lector.onload = () => {
+        try {
+            const tareasImportadas = JSON.parse(lector.result);
+            if (Array.isArray(tareasImportadas)) {
+                tareas = tareasImportadas;
+                idCounter = tareas.length ? Math.max(...tareas.map(t => t.id)) + 1 : 1; // Asigna el próximo ID disponible
+                mostrarTareas();
+            } else {
+                alert("El archivo JSON no contiene una lista de tareas válida.");
+            }
+        } catch (error) {
+            alert("Hubo un error al leer el archivo JSON.");
+        }
+    };
+    lector.readAsText(archivo);
+});
+

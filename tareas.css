@@ -19,9 +19,9 @@ body {
     border-radius: 8px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 80%;
-    max-width: 800px;
+    width: 900px;
     overflow: hidden;
+        margin-right: 50px;
 }
 
 h2 {
@@ -85,6 +85,7 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
+    
 }
 
 th {
@@ -93,19 +94,21 @@ th {
     padding: 12px 8px;
     background-color: #eceff1;
     color: #607d8b;
+    
 }
 
 td {
-    padding: 12px 8px;
+    padding: 12px 12px;
     background-color: #f9f9f9;
 }
 
 input[type="text"], select {
     width: 100%;
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 50px;
     border: 1px solid #ccc;
     margin-top: 5px;
+    margin-right: 5auto;
 }
 
 ul#lista {
@@ -180,3 +183,4 @@ ul#lista li span {
         font-size: 0.9rem;
     }
 }
+
