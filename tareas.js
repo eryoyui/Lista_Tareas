@@ -92,30 +92,56 @@ function mostrarTareas(listaTareas = tareas) {
 
         botonEditar.addEventListener("click", () => {
             if (botonEditar.textContent === "Editar") {
-                textoTarea.contentEditable = "true";
-                textoTarea.style.backgroundColor = "#f7f7f7";
-                textoTarea.focus();
+                const inputTexto = document.createElement("input");
+                inputTexto.type = "text";
+                inputTexto.value = tarea.texto;
+                textoTarea.replaceWith(inputTexto);
+
+                const inputTiempoEst = document.createElement("input");
+                inputTiempoEst.type = "number";
+                inputTiempoEst.value = tarea.tiempoEstimado.valor;
+                inputTiempoEst.style.width = "60px";
+
+                const selectUnidadEst = document.createElement("select");
+                ["minutos", "horas", "dias"].forEach(u => {
+                    const opt = document.createElement("option");
+                    opt.value = u;
+                    opt.textContent = u.charAt(0).toUpperCase() + u.slice(1);
+                    if (u === tarea.tiempoEstimado.unidad) opt.selected = true;
+                    selectUnidadEst.appendChild(opt);
+                });
+                tiempoEstimadoElement.replaceChildren(inputTiempoEst, selectUnidadEst);
+
+                const inputTiempoReal = document.createElement("input");
+                inputTiempoReal.type = "number";
+                inputTiempoReal.value = tarea.tiempoReal.valor;
+                inputTiempoReal.style.width = "60px";
+
+                const selectUnidadReal = document.createElement("select");
+                ["minutos", "horas", "dias"].forEach(u => {
+                    const opt = document.createElement("option");
+                    opt.value = u;
+                    opt.textContent = u.charAt(0).toUpperCase() + u.slice(1);
+                    if (u === tarea.tiempoReal.unidad) opt.selected = true;
+                    selectUnidadReal.appendChild(opt);
+                });
+                tiempoRealElement.replaceChildren(inputTiempoReal, selectUnidadReal);
+
                 botonEditar.textContent = "Guardar";
             } else {
-                textoTarea.contentEditable = "false";
-                textoTarea.style.backgroundColor = "transparent";
-                botonEditar.textContent = "Editar";
-                tarea.texto = textoTarea.textContent.trim(); // Actualiza el texto si se edita
-                
-                // Actualizar tiempo estimado y real si se edita
-                const tiempoEstimadoInput = nuevaTareaElement.querySelector("input[type='number'][placeholder='Tiempo Estimado']");
-                const unidadTiempoEstimadoSelect = nuevaTareaElement.querySelector("select[placeholder='días']");
-                const tiempoRealInput = nuevaTareaElement.querySelector("input[type='number'][placeholder='Tiempo Real']");
-                const unidadTiempoRealSelect = nuevaTareaElement.querySelector("select[placeholder='días']");
+                const inputTexto = nuevaTareaElement.querySelector("input[type='text']");
+                const inputTiempoEst = tiempoEstimadoElement.querySelector("input[type='number']");
+                const selectUnidadEst = tiempoEstimadoElement.querySelector("select");
+                const inputTiempoReal = tiempoRealElement.querySelector("input[type='number']");
+                const selectUnidadReal = tiempoRealElement.querySelector("select");
 
-                if (tiempoEstimadoInput && unidadTiempoEstimadoSelect) {
-                    tarea.tiempoEstimado.valor = parseInt(tiempoEstimadoInput.value) || 0;
-                    tarea.tiempoEstimado.unidad = unidadTiempoEstimadoSelect.value;
-                }
-                if (tiempoRealInput && unidadTiempoRealSelect) {
-                    tarea.tiempoReal.valor = parseInt(tiempoRealInput.value) || 0;
-                    tarea.tiempoReal.unidad = unidadTiempoRealSelect.value;
-                }
+                tarea.texto = inputTexto.value.trim();
+                tarea.tiempoEstimado.valor = parseInt(inputTiempoEst.value) || 0;
+                tarea.tiempoEstimado.unidad = selectUnidadEst.value;
+                tarea.tiempoReal.valor = parseInt(inputTiempoReal.value) || 0;
+                tarea.tiempoReal.unidad = selectUnidadReal.value;
+
+                mostrarTareas();
             }
         });
 
@@ -185,7 +211,7 @@ inputImportar.addEventListener("change", (evento) => {
             const tareasImportadas = JSON.parse(lector.result);
             if (Array.isArray(tareasImportadas)) {
                 tareas = tareasImportadas;
-                idCounter = tareas.length ? Math.max(...tareas.map(t => t.id)) + 1 : 1; // Asigna el próximo ID disponible
+                idCounter = tareas.length ? Math.max(...tareas.map(t => t.id)) + 1 : 1;
                 mostrarTareas();
             } else {
                 alert("El archivo JSON no contiene una lista de tareas válida.");
