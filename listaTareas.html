@@ -33,7 +33,10 @@
             <tr>
                 <th>Tarea</th>
                 <th>Categoría</th>
-                <th>Accion</th>
+                <th>Tiempo Estimado</th>
+                <th>Tiempo Real</th>
+                <th>Importar</th>
+                <th>Exportar</th>
             </tr>
             <tr>
                 <td><input type="text" id="inputTarea" placeholder="Escribe una tarea"></td>
@@ -45,9 +48,28 @@
                         <option value="otros">Otros</option>
                     </select>
                 </td>
-                <td><input type="file" id="exportar" accept=".json"></td>
+                <td>
+                    <input type="number" id="tiempoEstimado" placeholder="0" min="0">
+                    <select id="unidadTiempoEstimado">
+                        <option value="dias">días</option>
+                        <option value="horas">horas</option>
+                        <option value="minutos">minutos</option>
+                    </select>
                 </td>
-                <td><input type="file" id="importar" accept=".json"></td>
+                <td>
+                    <input type="number" id="tiempoReal" placeholder="0" min="0">
+                    <select id="unidadTiempoReal">
+                        <option value="dias">días</option>
+                        <option value="horas">horas</option>
+                        <option value="minutos">minutos</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="file" id="importar" accept=".json" title="Importar">
+                </td>
+                <td>
+                    <input type="file" id="exportar" accept=".json" title="Exportar">
+                </td>
             </tr>
         </table>
 

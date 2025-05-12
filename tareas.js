@@ -5,6 +5,10 @@ const selectCategoria = document.getElementById("categoria");
 const filtroCat = document.getElementById("filtroCat");
 const botonFiltrar = document.getElementById("filtrar");
 const botonVaciar = document.getElementById("vaciar");
+const tiempoEstimado = document.getElementById("tiempoEstimado");
+const unidadTiempoEstimado = document.getElementById("unidadTiempoEstimado");
+const tiempoReal = document.getElementById("tiempoReal");
+const unidadTiempoReal = document.getElementById("unidadTiempoReal");
 
 let tareas = [];
 let idCounter = 1;
@@ -26,7 +30,15 @@ botonAgregar.addEventListener("click", () => {
     const nuevaTarea = {
         id: idCounter++,
         texto: texto,
-        categoria: categoria
+        categoria: categoria,
+        tiempoEstimado: {
+            valor: parseInt(tiempoEstimado.value) || 0,
+            unidad: unidadTiempoEstimado.value
+        },
+        tiempoReal: {
+            valor: parseInt(tiempoReal.value) || 0,
+            unidad: unidadTiempoReal.value
+        }
     };
 
     tareas.push(nuevaTarea);
@@ -42,6 +54,16 @@ function mostrarTareas(listaTareas = tareas) {
 
         const textoTarea = document.createElement("span");
         textoTarea.textContent = tarea.texto;
+
+        const tiempoEstimadoElement = document.createElement("span");
+        tiempoEstimadoElement.textContent = ` ⏳ ${tarea.tiempoEstimado.valor}${tarea.tiempoEstimado.unidad === 'dias' ? ' días' : tarea.tiempoEstimado.unidad === 'horas' ? ' horas' : ' minutos'}`;
+        tiempoEstimadoElement.style.color = "#4CAF50";
+        tiempoEstimadoElement.style.marginLeft = "10px";
+
+        const tiempoRealElement = document.createElement("span");
+        tiempoRealElement.textContent = ` ⏱️ ${tarea.tiempoReal.valor}${tarea.tiempoReal.unidad === 'dias' ? ' días' : tarea.tiempoReal.unidad === 'horas' ? ' horas' : ' minutos'}`;
+        tiempoRealElement.style.color = "#2196F3";
+        tiempoRealElement.style.marginLeft = "10px";
 
         const categoriaTarea = document.createElement("span");
         categoriaTarea.textContent = " [" + tarea.categoria + "]";
@@ -79,6 +101,21 @@ function mostrarTareas(listaTareas = tareas) {
                 textoTarea.style.backgroundColor = "transparent";
                 botonEditar.textContent = "Editar";
                 tarea.texto = textoTarea.textContent.trim(); // Actualiza el texto si se edita
+                
+                // Actualizar tiempo estimado y real si se edita
+                const tiempoEstimadoInput = nuevaTareaElement.querySelector("input[type='number'][placeholder='Tiempo Estimado']");
+                const unidadTiempoEstimadoSelect = nuevaTareaElement.querySelector("select[placeholder='días']");
+                const tiempoRealInput = nuevaTareaElement.querySelector("input[type='number'][placeholder='Tiempo Real']");
+                const unidadTiempoRealSelect = nuevaTareaElement.querySelector("select[placeholder='días']");
+
+                if (tiempoEstimadoInput && unidadTiempoEstimadoSelect) {
+                    tarea.tiempoEstimado.valor = parseInt(tiempoEstimadoInput.value) || 0;
+                    tarea.tiempoEstimado.unidad = unidadTiempoEstimadoSelect.value;
+                }
+                if (tiempoRealInput && unidadTiempoRealSelect) {
+                    tarea.tiempoReal.valor = parseInt(tiempoRealInput.value) || 0;
+                    tarea.tiempoReal.unidad = unidadTiempoRealSelect.value;
+                }
             }
         });
 
@@ -94,6 +131,8 @@ function mostrarTareas(listaTareas = tareas) {
 
         nuevaTareaElement.appendChild(textoTarea);
         nuevaTareaElement.appendChild(categoriaTarea);
+        nuevaTareaElement.appendChild(tiempoEstimadoElement);
+        nuevaTareaElement.appendChild(tiempoRealElement);
         nuevaTareaElement.appendChild(contenedorBotones);
 
         lista.appendChild(nuevaTareaElement);
@@ -157,5 +196,3 @@ inputImportar.addEventListener("change", (evento) => {
     };
     lector.readAsText(archivo);
 });
-
-
