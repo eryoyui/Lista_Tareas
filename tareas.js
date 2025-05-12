@@ -9,6 +9,7 @@ const tiempoEstimado = document.getElementById("tiempoEstimado");
 const unidadTiempoEstimado = document.getElementById("unidadTiempoEstimado");
 const tiempoReal = document.getElementById("tiempoReal");
 const unidadTiempoReal = document.getElementById("unidadTiempoReal");
+const inputBuscar = document.getElementById("buscarTexto");
 
 let tareas = [];
 let idCounter = 1;
@@ -170,6 +171,19 @@ botonFiltrar.addEventListener("click", () => {
     const tareasFiltradas = categoriaSeleccionada === "todos"
         ? tareas
         : tareas.filter(t => t.categoria === categoriaSeleccionada);
+    mostrarTareas(tareasFiltradas);
+});
+
+inputBuscar.addEventListener("input", () => {
+    const textoBusqueda = inputBuscar.value.toLowerCase();
+    const categoriaSeleccionada = filtroCat.value;
+
+    const tareasFiltradas = tareas.filter(t => {
+        const coincideTexto = t.texto.toLowerCase().includes(textoBusqueda);
+        const coincideCategoria = categoriaSeleccionada === "todos" || t.categoria === categoriaSeleccionada;
+        return coincideTexto && coincideCategoria;
+    });
+
     mostrarTareas(tareasFiltradas);
 });
 
