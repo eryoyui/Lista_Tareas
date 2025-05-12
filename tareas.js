@@ -195,12 +195,13 @@ function exportarTarea(id, tipo) {
         const blob = new Blob([JSON.stringify(tarea, null, 2)], { type: "application/json" });
         descargarArchivo(blob, `tarea-${id}.json`);
     } else if (tipo === "csv") {
-        const encabezado = "ID,Texto,Categoria\n";
-        const fila = `${tarea.id},"${tarea.texto}","${tarea.categoria}"\n`;
+        const encabezado = "ID,Texto,Categoria,Tiempo Estimado Valor,Tiempo Estimado Unidad,Tiempo Real Valor,Tiempo Real Unidad\n";
+        const fila = `${tarea.id},"${tarea.texto}","${tarea.categoria}",${tarea.tiempoEstimado.valor},${tarea.tiempoEstimado.unidad},${tarea.tiempoReal.valor},${tarea.tiempoReal.unidad}\n`;
         const blob = new Blob([encabezado + fila], { type: "text/csv" });
         descargarArchivo(blob, `tarea-${id}.csv`);
     }
 }
+
 
 function descargarArchivo(blob, nombreArchivo) {
     const url = URL.createObjectURL(blob);
